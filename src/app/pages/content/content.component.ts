@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import { ActivatedRoute } from '@angular/router';
+import { dataFake } from '../../data/dataFake';
 @Component({
   selector: 'app-content',
   imports: [],
@@ -7,13 +8,23 @@ import { Component, OnInit } from '@angular/core';
   styleUrl: './content.component.css',
 })
 export class ContentComponent implements OnInit {
-  photoCover: string =
-    'https://static1.moviewebimages.com/wordpress/wp-content/uploads/2022/07/The-Bear-on-FX-Hulu.jpg';
-  contentTitle: string = 'Restaurante abre com dificuldades finaceiras';
-  contentDescription: string =
-    'O estabelecimento "The Beef" passa por dificuldades financeiras após mudança de dono. Carmy Bearzzato assume os négocios da familía em meio a cénario conturbado';
+  photoCover: string = '';
+  contentTitle: string = '';
+  contentDescription: string = '';
+  private id: string | null = '0';
 
-  constructor() {}
+  constructor(private route: ActivatedRoute) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.paramMap.subscribe((value) => (this.id = value.get('id')));
+    this.setValuesToComponent(this.id);
+  }
+
+  setValuesToComponent(id: string | null) {
+    const result = dataFake.filter((article) => article.id == id)[0];
+
+    this.contentTitle = result.title;
+    this.contentDescription = result.description;
+    this.photoCover = result.photo;
+  }
 }
